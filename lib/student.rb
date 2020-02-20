@@ -23,13 +23,13 @@ class Student
   
   def self.drop_table
     sql = <<-SQL
-    SELECT TABLE students
+    DROP TABLE students
     SQL
     DB[:conn].execute(sql)
   end
   
   def update
-    sql = "UPDATE songs SET name = ?, grade = ? WHERE id = ?"
+    sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
     DB[:conn].execute(sql, self.name, self.grade, self.id)
   end
   
@@ -47,7 +47,7 @@ class Student
     end
   end
   
-   def self.create(name:, grade:)
+   def self.create(name, grade)
     student = Student.new(name, grade)
     student.save
     student
@@ -57,5 +57,9 @@ class Student
     sql = "SELECT * FROM students WHERE name = ?"
     result = DB[:conn].execute(sql, name)[0]
     Student.new(result[0], result[1], result[2])
+  end
+  
+  def self.new_from_db(row)
+    Student.new(row[0],row[1],row[2])
   end
 end
